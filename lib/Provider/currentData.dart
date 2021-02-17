@@ -6,21 +6,21 @@ class CurrentData extends ChangeNotifier {
   Box gameBox;
   List<dynamic> gamesList = [
     GameModel(
-      name: "PokeMonData",
-      scoreBoard: [
-        {
-          "name": "1234",
-          "score" : "10000",
-        },
-        {
-          "name": "134",
-          "score" : "1020",
-        },
-        {
-          "name": "124",
-          "score" : "1010",
-        }
-      ]
+        name: "PokeMonData",
+        scoreBoard: [
+          {
+            "name": "1234",
+            "score" : "10000",
+          },
+          {
+            "name": "134",
+            "score" : "1020",
+          },
+          {
+            "name": "124",
+            "score" : "1010",
+          }
+        ]
     ),
     GameModel(
         name: "Clash Of Clans",
@@ -42,10 +42,50 @@ class CurrentData extends ChangeNotifier {
   ];
   onStartUp() async{
     // this function will run in the beginning and fetch all the data from hive
-     gameBox = await Hive.openBox("games");
-     gamesList = gameBox.get("userData");
-    print(gamesList);
-    print(gamesList[0].name);
+    gameBox = await Hive.openBox("games");
+
+
+    gamesList = gameBox.get("userData");
+    if(gamesList == null) {
+      gamesList = [
+        GameModel(
+            name: "PokeMonData",
+            scoreBoard: [
+              {
+                "name": "1234",
+                "score" : "10000",
+              },
+              {
+                "name": "134",
+                "score" : "1020",
+              },
+              {
+                "name": "124",
+                "score" : "1010",
+              }
+            ]
+        ),
+        GameModel(
+            name: "Clash Of Clans",
+            scoreBoard: [
+              {
+                "name": "1234",
+                "score" : "19000",
+              },
+              {
+                "name": "134",
+                "score" : "1020",
+              },
+              {
+                "name": "124",
+                "score" : "1010",
+              }
+            ]
+        )
+      ];
+    }
+    //print(gamesList);
+    //print(gamesList[0].name);
     //gameBox.put("userData", gamesList);
   }
 
@@ -66,13 +106,13 @@ class CurrentData extends ChangeNotifier {
 
     if(duplicateGame == false){
       gamesList.add(
-        GameModel(
-          name: gameName,
-          scoreBoard: [{
-            "name":userName,
-            "score":score
-          }],
-        )
+          GameModel(
+            name: gameName,
+            scoreBoard: [{
+              "name":userName,
+              "score":score
+            }],
+          )
       );
       gameBox.put("userData", gamesList);
       print(gamesList);
@@ -92,32 +132,32 @@ class CurrentData extends ChangeNotifier {
           });
           List<int> scores=[];
 
-            element.scoreBoard.forEach((el) {
-              scores.add(int.parse(el["score"]));
+          element.scoreBoard.forEach((el) {
+            scores.add(int.parse(el["score"]));
+          });
+          scores.sort();
+          List<Map> replace = [];
+          bool active = true;
+          scores.forEach((elemet) {
+            active = true;
+            element.scoreBoard.forEach((hj) {
+              if(int.parse(hj["score"]) == elemet && active == true) {
+                active = false;
+                replace.insert(0, {
+                  "name":hj["name"],
+                  "score":elemet.toString(),
+                });
+              }
             });
-            scores.sort();
-            List<Map> replace = [];
-            bool active = true;
-            scores.forEach((elemet) {
-              active = true;
-              element.scoreBoard.forEach((hj) {
-                if(int.parse(hj["score"]) == elemet && active == true) {
-                  active = false;
-                  replace.insert(0, {
-                    "name":hj["name"],
-                    "score":elemet.toString(),
-                  });
-                }
-              });
-            });
+          });
 
-            element.scoreBoard = replace;
-            print(element.scoreBoard);
+          element.scoreBoard = replace;
+          print(element.scoreBoard);
 
-            //someObjects.sort((a, b) => a.someProperty.compareTo(b.someProperty));
-            print(scores);
-            //print(element2.scoreBoard["score"]);
-            //scores.add(int.parse(element2.scoreBoard["score"]));
+          //someObjects.sort((a, b) => a.someProperty.compareTo(b.someProperty));
+          print(scores);
+          //print(element2.scoreBoard["score"]);
+          //scores.add(int.parse(element2.scoreBoard["score"]));
           print(scores);
         } else{
           // return this message to the user that the maximum scores that can be added are 10
