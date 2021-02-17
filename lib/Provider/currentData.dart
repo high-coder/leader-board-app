@@ -10,7 +10,7 @@ class CurrentData extends ChangeNotifier {
       scoreBoard: [
         {
           "name": "1234",
-          "score" : "1000",
+          "score" : "10000",
         },
         {
           "name": "134",
@@ -27,7 +27,7 @@ class CurrentData extends ChangeNotifier {
         scoreBoard: [
           {
             "name": "1234",
-            "score" : "1000",
+            "score" : "19000",
           },
           {
             "name": "134",
